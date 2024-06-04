@@ -27,15 +27,16 @@ const register = async function(req, res) {
       return res.status(404).json({ message: CODES.UNOF });
     }
 
-    const __user = new User({ email, password });
-    __user.apiKey = uuid.v4();
+    let apiKey = uuid.v4();
+    const __user = new User({ email, password,apiKey });
+    //let apiKey = uuid.v4();
     const saved = await __user.save();
-
+    
     if (!saved) {
       return res.status(500).json({ message:"User Not saved" });
     }
 
-    let data = generate_token(__user._id);
+    let data = generate_token(saved._id);
     if (!data) {
       return res.status(500).json({ message: "otp not generated" });
     }
