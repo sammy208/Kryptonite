@@ -32,7 +32,7 @@ const register = async function(req, res) {
     const saved = await __user.save();
 
     if (!saved) {
-      return res.status(500).json({ message: CODES.serverError });
+      return res.status(500).json({ message:"User Not saved" });
     }
 
     let data = generate_token(__user._id);

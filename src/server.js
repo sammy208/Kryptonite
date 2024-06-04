@@ -35,11 +35,11 @@ curl -X POST https://kryptonite-app-oor2.onrender.com/api/auth/register \
   "email": "yourEmail@example.com"
 }'
 
-curl -X POST https://kryptonite-y9xt.onrender.com/api/auth/register \
+curl -X POST https://kryptonite-0qpt.onrender.com/api/auth/register \
 -H "Content-Type: application/json" \
 -d '{
   "password": "dessxvii1234_",
-  "email": "anoncomrade993@gmail.com"
+  "email": "usertest@gmail.com"
 }'
 
 
