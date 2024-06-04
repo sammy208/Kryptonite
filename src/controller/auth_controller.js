@@ -42,7 +42,7 @@ const register = async function(req, res) {
 
     return res.status(201).json({ token: data.token, api_key: data.apiKey });
   } catch (e) {
-    return res.status(500).json({ message: CODES.serverError });
+    return res.status(500).json({ message: e});
   }
 }
 
