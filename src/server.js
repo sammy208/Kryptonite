@@ -4,9 +4,20 @@ const bodyParser = require('body-parser'); // Import Body Parser to parse incomi
 const config = require('./config'); // Import configuration variables from config.js
 const authRoutes = require('./routers/auth_routes.js'); // Import authentication routes
 const fileRoutes = require('./routers/file_routes.js'); // Import file handling routes
-
+const session = require('express-session');
 const app = express(); // Initialize an Express application
 const PORT = process.env.PORT || 5000; // Define the port to run the server on
+
+//session to store items
+app.use(session({
+  secret: '@Kryptonite_1234',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: true }
+}));
+
+
+
 
 // Middleware
 app.use(bodyParser.json()); // Use Body Parser middleware to parse JSON bodies
@@ -24,6 +35,12 @@ curl -X POST https://kryptonite-app-oor2.onrender.com/api/auth/register \
   "email": "yourEmail@example.com"
 }'
 
+curl -X POST https://kryptonite-y9xt.onrender.com/api/auth/register \
+-H "Content-Type: application/json" \
+-d '{
+  "password": "dessxvii1234_",
+  "email": "anoncomrade993@gmail.com"
+}'
 
 
 
