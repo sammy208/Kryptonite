@@ -4,6 +4,7 @@
 const User = require('../models/UserModel.js');
 const uuid = require('uuid');
 const { generate_token } = require('../utils/tools.js');
+const regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
 
 const CODES = {
   serverError: "Server Error Occurred",
@@ -16,21 +17,21 @@ const CODES = {
  const register = async function(req, res) {
   try {
     const { email, password } = req.body;
-    const regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
-
-    if (!regex.test(email)) {
+    //^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$
+      if (!email.test(regex)) {
       return res.status(403).json({ message: "Email pattern not accepted" })
     }
 
     const _user = await User.findOne({ email });
-    if (!_user) {
+    if (_user) {
       return res.status(404).json({ message: CODES.UNOF });
     }
 
     const __user = new User({ email, password });
     const saved = await __user.save();
+    
     if (!__user) {
-      return res.status(500).json({ message: CODES.serverError })
+      return res.status(500).json({ message: CODES.serverError });
     }
     __user.apiKey = uuid.v4();
     let data = generate_token();
@@ -46,16 +47,16 @@ const CODES = {
 const user_login = async function(req, res) {
   try {
     const { email, password } = req.body;
-
-    const regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
-
-    if (!regex.test(email)) {
+    //^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$
+    
+    if (!email.test(regex)) {
       return res.status(403).json({ message: "Email pattern not accepted" })
     }
     const _user = await User.findOne({ email });
     if (!_user) {
       return res.status(404).json({ message: CODES.UNOF });
     }
+    req.session.email = email;
     return res.redirect(301, '/generate-otp');
   } catch (e) {
     return res.status(500).json({ message: CODES.serverError })
@@ -66,7 +67,7 @@ const user_login = async function(req, res) {
 // Controller for generating OTP
 const generateOTP = async (req, res) => {
   try {
-    const { email } = req.body; // Extract email from request body
+    const email = req.session.email; // Extract email from request body
     let check = await authService.generateOTP(email); // Generate OTP for the email
     if (!check) {
       console.log('Error generating otp');
