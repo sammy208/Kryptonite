@@ -27,23 +27,22 @@ const register = async function(req, res) {
       return res.status(404).json({ message: CODES.UNOF });
     }
 
-    let apiKey = uuid.v4();
-    const __user = new User({ email, password,apiKey });
-    //let apiKey = uuid.v4();
+    const __user = new User({ email, password });
+    __user.apiKey = uuid.v4();
     const saved = await __user.save();
-    
+
     if (!saved) {
-      return res.status(500).json({ message:"User Not saved" });
+      return res.status(500).json({ message: "User Not saved" });
     }
 
-    let data = generate_token(saved._id);
-    if (!data) {
+    let data = generate_token(email);
+    /*if (!data) {
       return res.status(500).json({ message: "otp not generated" });
     }
-
+*/
     return res.status(201).json({ token: data.token, api_key: data.apiKey });
   } catch (e) {
-    return res.status(500).json({ message: e});
+    return res.status(500).json({ message: CODES.serverError });
   }
 }
 
@@ -59,8 +58,8 @@ const user_login = async function(req, res) {
     if (!_user) {
       return res.status(404).json({ message: CODES.UNOF });
     }
-    req.session.email = email;
-    return res.redirect(301, '/generate-otp');
+    //req.session.email = email;
+    return res.redirect(301, `/generate-otp?e=${email}`);
   } catch (e) {
     return res.status(500).json({ message: CODES.serverError })
   }
@@ -70,7 +69,8 @@ const user_login = async function(req, res) {
 // Controller for generating OTP
 const generateOTP = async (req, res) => {
   try {
-    const email = req.session.email; // Extract email from request body
+    let email = req.query.e;
+     // Extract email from request body
     let check = await authService.generateOTP(email); // Generate OTP for the email
     if (!check) {
       console.log('Error generating otp');
@@ -108,4 +108,4 @@ module.exports = {
   generateOTP,
   verifyOTP,
   invalidateApiKey
-}
+  }
