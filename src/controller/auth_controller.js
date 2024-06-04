@@ -30,10 +30,11 @@ const CODES = {
     const __user = new User({ email, password });
     const saved = await __user.save();
     
-    if (!__user) {
+    if (!saved) {
       return res.status(500).json({ message: CODES.serverError });
     }
     __user.apiKey = uuid.v4();
+    
     let data = generate_token();
     if (!data) {
       return res.status(500).json({ message: CODES.serverError })
@@ -105,4 +106,4 @@ module.exports = {
   generateOTP,
   verifyOTP,
   invalidateApiKey
-};
+                        }
