@@ -1,6 +1,6 @@
 const express = require('express'); // Import Express
 const authController = require('../controller/auth_controller.js'); // Import authentication controller
-const authenticateJWT = require('../middleware/authMiddleware'); // Import JWT authentication middleware
+const authenticateJWT = require('../middlewares/auth_middleware.js'); // Import JWT authentication middleware
 const router = express.Router(); // Create a new router
 
 router.post('/register', authController.register); // Register route

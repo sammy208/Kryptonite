@@ -1,6 +1,6 @@
 const express = require('express'); 
 const fileController = require('../controller/file_controller.js'); 
-const validateApiKey = require('../middleware/apiKeyMiddleware'); 
+const validateApiKey = require('../middlewares/apikey_middleware.js'); 
 const router = express.Router(); 
 
 router.post('/upload', validateApiKey, fileController.uploadImage); 
