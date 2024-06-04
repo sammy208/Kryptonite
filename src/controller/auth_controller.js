@@ -14,11 +14,11 @@ const CODES = {
 };
 
 
- const register = async function(req, res) {
+const register = async function(req, res) {
   try {
     const { email, password } = req.body;
     //^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$
-      if (!email.test(regex)) {
+    if (!email.test(regex)) {
       return res.status(403).json({ message: "Email pattern not accepted" })
     }
 
@@ -28,17 +28,18 @@ const CODES = {
     }
 
     const __user = new User({ email, password });
+    __user.apiKey = uuid.v4();
     const saved = await __user.save();
-    
+
     if (!saved) {
       return res.status(500).json({ message: CODES.serverError });
     }
-    __user.apiKey = uuid.v4();
-    
-    let data = generate_token();
+
+    let data = generate_token(__user._id);
     if (!data) {
-      return res.status(500).json({ message: CODES.serverError })
+      return res.status(500).json({ message: "otp not generated" });
     }
+
     return res.status(201).json({ token: data.token, api_key: data.apiKey });
   } catch (e) {
     return res.status(500).json({ message: CODES.serverError });
@@ -49,7 +50,7 @@ const user_login = async function(req, res) {
   try {
     const { email, password } = req.body;
     //^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$
-    
+
     if (!email.test(regex)) {
       return res.status(403).json({ message: "Email pattern not accepted" })
     }
@@ -106,4 +107,4 @@ module.exports = {
   generateOTP,
   verifyOTP,
   invalidateApiKey
-                        }
+}

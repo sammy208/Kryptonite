@@ -16,9 +16,9 @@ const hashPassword = function(password, iterations = 10000, keylen = 512, digest
   return crypto.pbkdf2Sync(password, salt, iterations, keylen, digest).toString('hex');
 };
 
-const generate_token = function() {
+const generate_token = function(id) {
   try {
-    const token = jwt.sign({ id: kryptonian._id }, config.jwtSecret, { expiresIn: '1h' });
+    const token = jwt.sign({ id}, config.jwtSecret, { expiresIn: '1h' });
     return { token, apiKey };
   } catch (e) {
     throw e
