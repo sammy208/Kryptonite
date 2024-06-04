@@ -13,7 +13,7 @@ const CODES = {
 };
 
 
-export const user_register = async function(req, res) {
+ const register = async function(req, res) {
   try {
     const { email, password } = req.body;
     const regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
@@ -43,7 +43,7 @@ export const user_register = async function(req, res) {
   }
 }
 
-export const user_login = async function(req, res) {
+const user_login = async function(req, res) {
   try {
     const { email, password } = req.body;
 
@@ -98,4 +98,10 @@ const invalidateApiKey = async (req, res) => {
   } catch (error) {
     res.status(400).json({ error: error.message }); // Respond with error message
   }
+};
+module.exports = {
+  register,
+  generateOTP,
+  verifyOTP,
+  invalidateApiKey
 };
